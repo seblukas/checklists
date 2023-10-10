@@ -1,0 +1,52 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      dynamodb:
+        image: amazon/dynamodb-local
+        ports:
+          - 8000:8000
+        env:
+          AWS_DEFAULT_REGION: localhost
+          AWS_ACCESS_KEY_ID: fake
+          AWS_SECRET_ACCESS_KEY: fake
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Create DynamoDB table
+        run: |
+          aws configure set aws_access_key_id fake
+          aws configure set aws_secret_access_key fake
+          aws dynamodb create-table \
+          --table-name checklists \
+          --attribute-definitions \
+           AttributeName=PK,AttributeType=S \
+           AttributeName=SK,AttributeType=S \
+          --key-schema \
+           AttributeName=PK,KeyType=HASH \
+           AttributeName=SK,KeyType=RANGE \
+          --provisioned-throughput \
+           ReadCapacityUnits=5,WriteCapacityUnits=5 \
+          --endpoint-url "http://localhost:8000" \
+          --region "localhost" > /dev/null
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
+      # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
+      - name: Update dependency graph
+        uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
