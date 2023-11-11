@@ -11,7 +11,7 @@ import java.util.List;
 public class ChecklistResource {
 
     @Inject
-    protected DynamoDBChecklistRepository checklistRepository;
+    protected ChecklistRepository checklistRepository;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

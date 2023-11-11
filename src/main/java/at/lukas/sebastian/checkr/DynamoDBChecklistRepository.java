@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class DynamoDBChecklistRepository {
+public class DynamoDBChecklistRepository implements ChecklistRepository{
 
     private final String tableName = "checklists";
     @Inject

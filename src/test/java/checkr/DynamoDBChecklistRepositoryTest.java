@@ -1,7 +1,7 @@
 package checkr;
 
 import at.lukas.sebastian.checkr.Checklist;
-import at.lukas.sebastian.checkr.DynamoDBChecklistRepository;
+import at.lukas.sebastian.checkr.ChecklistRepository;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class DynamoDBChecklistRepositoryTest {
 
     @Inject
-    DynamoDBChecklistRepository repository;
+    ChecklistRepository repository;
 
     @BeforeEach
     void init() {
