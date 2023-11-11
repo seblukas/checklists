@@ -11,7 +11,7 @@ import java.util.List;
 public class ChecklistResource {
 
     @Inject
-    protected ChecklistRepository checklistRepository;
+    protected DynamoDBChecklistRepository checklistRepository;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -31,6 +31,8 @@ public class ChecklistResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Checklist createNewChecklist(Checklist checklist) {
+        String id = "cl#" + checklist.getName().replaceAll(" ", "");
+        checklist.setId(id);
         return checklistRepository.save(checklist);
     }
 }

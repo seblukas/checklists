@@ -5,6 +5,7 @@ import at.lukas.sebastian.checkr.DynamoDBChecklistRepository;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,6 +18,13 @@ public class DynamoDBChecklistRepositoryTest {
 
     @Inject
     DynamoDBChecklistRepository repository;
+
+    @BeforeEach
+    void init() {
+        repository.deleteAll();
+        Checklist checklist = new Checklist("cl#1", "Checklist 1");
+        repository.save(checklist);
+    }
 
     @Test
     void shouldGetChecklistById() {

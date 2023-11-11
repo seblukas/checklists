@@ -1,7 +1,7 @@
 package checkr;
 
 import at.lukas.sebastian.checkr.Checklist;
-import at.lukas.sebastian.checkr.ChecklistRepository;
+import at.lukas.sebastian.checkr.DynamoDBChecklistRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.test.junit.QuarkusTest;
@@ -19,11 +19,11 @@ public class ChecklistResourceTest {
 
     String basePath = "/api";
     @Inject
-    ChecklistRepository checklistRepository;
-    Checklist myFirstChecklist = new Checklist(null, "My first Checklist");
-    Checklist mySecondChecklist = new Checklist(null, "My second Checklist");
-    Checklist expectedChecklist1 = new Checklist("cl#1", "My first Checklist");
-    Checklist expectedChecklist2 = new Checklist("cl#2", "My second Checklist");
+    DynamoDBChecklistRepository checklistRepository;
+    Checklist myFirstChecklist = new Checklist("cl#MyfirstChecklist", "My first Checklist");
+    Checklist mySecondChecklist = new Checklist("cl#MysecondChecklist", "My second Checklist");
+    Checklist expectedChecklist1 = new Checklist("cl#MyfirstChecklist", "My first Checklist");
+    Checklist expectedChecklist2 = new Checklist("cl#MysecondChecklist", "My second Checklist");
     ObjectMapper mapper = new ObjectMapper();
 
     @BeforeEach
@@ -51,7 +51,7 @@ public class ChecklistResourceTest {
 
         given()
                 .when()
-                .get(basePath + "/checklists/cl#1")
+                .get(basePath + "/checklists/cl#MyfirstChecklist")
                 .then()
                 .statusCode(200)
                 .body(is(json));
@@ -63,7 +63,7 @@ public class ChecklistResourceTest {
 
         given()
                 .when()
-                .get(basePath + "/checklists/cl#2")
+                .get(basePath + "/checklists/cl#MysecondChecklist")
                 .then()
                 .statusCode(200)
                 .body(is(json));
@@ -81,7 +81,7 @@ public class ChecklistResourceTest {
     @Test
     public void shouldCreateNewChecklist() throws JsonProcessingException {
         String requestBody = mapper.writeValueAsString(new Checklist(null, "My third Checklist"));
-        String responseBody = mapper.writeValueAsString(new Checklist("cl#3", "My third Checklist"));
+        String responseBody = mapper.writeValueAsString(new Checklist("cl#MythirdChecklist", "My third Checklist"));
 
         given()
                 .when()
